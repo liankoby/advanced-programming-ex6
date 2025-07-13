@@ -2,7 +2,7 @@
 
 ## 📘 Project Background
 
-This project was developed as part of the Advanced Programming course at Bar-Ilan University (Spring 2024).  
+This project was developed as part of the Advanced Programming course at Bar-Ilan University (Spring 2025).  
 It implements a **Publisher/Subscriber system visualizer**, allowing users to define and interact with computational graphs.
 
 The system includes:
