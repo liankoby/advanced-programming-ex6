@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Graph View</title>
+    <style>
+        body { font-family: sans-serif; background: #fff0f6; margin: 0; }
+        .graph-pane {
+            position: relative;
+            width: 1000px;
+            height: 800px;
+            border: 2px solid #ffb6c1;
+            background: #ffe4e1;
+        }
+        .node {
+            position: absolute;
+            padding: 10px;
+            border: 2px solid #ff69b4;
+            text-align: center;
+            font-weight: bold;
+            color: #880e4f;
+        }
+        .agent { background-color: #ffb3e6; border-radius: 12px; }
+        .topic { background-color: #b3cde0; border-radius: 50%; }
+        .label {
+            position: absolute;
+            font-size: 12px;
+            color: #880e4f;
+            text-align: center;
+            width: 100px;
+            left: -20px;
+            top: 35px;
+        }
+    </style>
+</head>
+<body>
+<div class="graph-pane">
+    <div class='node topic' style='left:800px; top:400px;'>D</div>
+<div class='label' style='left:800px; top:435px;'>0</div>
+<div class='node topic' style='left:712px; top:612px;'>E</div>
+<div class='label' style='left:712px; top:647px;'>0</div>
+<div class='node topic' style='left:500px; top:700px;'>R1</div>
+<div class='label' style='left:500px; top:735px;'>0</div>
+<div class='node agent' style='left:287px; top:612px;'>Aplus</div>
+<div class='node topic' style='left:200px; top:400px;'>R2</div>
+<div class='label' style='left:200px; top:435px;'>0</div>
+<div class='node topic' style='left:287px; top:187px;'>A</div>
+<div class='label' style='left:287px; top:222px;'>0</div>
+<div class='node topic' style='left:499px; top:100px;'>B</div>
+<div class='label' style='left:499px; top:135px;'>0</div>
+<div class='node topic' style='left:712px; top:187px;'>C</div>
+<div class='label' style='left:712px; top:222px;'>0</div>
+
+    <svg style="position:absolute; top:0; left:0; width:1000px; height:800px;">
+        <line x1='817' y1='433' x2='369' y2='618' stroke='#f06292' stroke-width='2' marker-end='url(#arrow)'/>
+<line x1='727' y1='632' x2='372' y2='632' stroke='#f06292' stroke-width='2' marker-end='url(#arrow)'/>
+<line x1='369' y1='645' x2='517' y2='706' stroke='#f06292' stroke-width='2' marker-end='url(#arrow)'/>
+<line x1='323' y1='599' x2='263' y2='452' stroke='#f06292' stroke-width='2' marker-end='url(#arrow)'/>
+<line x1='337' y1='242' x2='337' y2='597' stroke='#f06292' stroke-width='2' marker-end='url(#arrow)'/>
+<line x1='535' y1='152' x2='350' y2='599' stroke='#f06292' stroke-width='2' marker-end='url(#arrow)'/>
+<line x1='737' y1='231' x2='361' y2='607' stroke='#f06292' stroke-width='2' marker-end='url(#arrow)'/>
+
+        <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="5" orient="auto">
+                <path d="M0,0 L10,5 L0,10 z" fill="#d81b60" />
+            </marker>
+        </defs>
+    </svg>
+</div>
+</body>
+</html>

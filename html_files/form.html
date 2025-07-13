@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Panel</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #fff0f6;
+            padding: 20px;
+        }
+
+        h2, h3 {
+            color: #d81b60;
+        }
+
+        form {
+            background: #ffe4e1;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #f06292;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"],
+        input[type="text"] {
+            width: 95%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ff69b4;
+            border-radius: 5px;
+        }
+
+        button,
+        input[type="submit"] {
+            background-color: #f06292;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover,
+        input[type="submit"]:hover {
+            background-color: #ec407a;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Let's Visualize Graphs</h2>
+<p>Upload your configuration file below to see a beautiful graph representation!</p>
+
+<h3>Load Configuration</h3>
+<form action="http://localhost:8080/upload"
+      method="post"
+      enctype="multipart/form-data"
+      target="graphFrame"
+      onsubmit="setTimeout(reloadTable, 500)">
+    <input type="file" name="file" required>
+    <button type="submit">Deploy</button>
+</form>
+
+<h3>Send Value to Topic</h3>
+<form id="sendForm" onsubmit="handleSend(event)">
+    <input type="text" name="topic" placeholder="Topic name" required>
+    <input type="text" name="value" placeholder="Value to send" required>
+    <input type="submit" value="Send">
+</form>
+
+<script>
+    function handleSend(event) {
+        event.preventDefault();
+        const topic = event.target.topic.value;
+        const value = event.target.value.value;
+        const url = `http://localhost:8080/publish?topic=${encodeURIComponent(topic)}&value=${encodeURIComponent(value)}`;
+
+        parent.frames["valuesFrame"].location.href = url;
+        parent.frames["graphFrame"].location.href = "/app/graph.html?" + Date.now(); // reload graph with updated values
+    }
+
+    function reloadTable() {
+        parent.frames["valuesFrame"].location.href = "/publish"; // no params → show current topic table
+    }
+</script>
+
+</body>
+</html>
