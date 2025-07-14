@@ -28,5 +28,5 @@ git clone git@github.com:liankoby/advanced-programming-ex6.git
 cd advanced-programming-ex6
 javac project_biu/**/*.java
 
-🎥 [Watch the demo video](https://www.youtube.com/watch?v=your-video-id](https://youtu.be/Ii8z1NV1ZRE)
+🎥 [Watch the demo video] https://youtu.be/Ii8z1NV1ZRE
 
