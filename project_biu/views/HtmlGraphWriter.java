@@ -12,11 +12,30 @@ import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * Utility class that generates an HTML visualization of the current graph.
+ * <p>
+ * The output HTML is saved to the file: {@code src/html_files/graph.html}.
+ * It uses a template HTML file (with placeholders for nodes and edges) and
+ * dynamically injects topic and agent nodes along with SVG lines representing edges.
+ * </p>
+ */
 public class HtmlGraphWriter {
 
+    /**
+     * Generates an HTML representation of the given graph and writes it to graph.html.
+     * <p>
+     * This method reads a predefined template, computes node positions in a circular layout,
+     * renders topic values, draws edges between nodes, and injects the results into the template.
+     * </p>
+     *
+     * @param g the {@link Graph} object to render as HTML
+     */
     public static void writeGraphHtml(Graph g) {
         try {
-            List<String> templateLines = Files.readAllLines(Paths.get("src/html_files/graph_template.html"), StandardCharsets.UTF_8);
+            List<String> templateLines = Files.readAllLines(
+                    Paths.get("src/html_files/graph_template.html"), StandardCharsets.UTF_8);
+
             StringBuilder htmlBuilder = new StringBuilder();
             for (String line : templateLines) {
                 htmlBuilder.append(line).append("\n");
@@ -35,6 +54,7 @@ public class HtmlGraphWriter {
             int total = nodes.size();
             int index = 0;
 
+            // Position and draw nodes
             for (Node node : nodes) {
                 double angle = 2 * Math.PI * index / total;
                 int x = (int) (centerX + radius * Math.cos(angle));
@@ -44,6 +64,7 @@ public class HtmlGraphWriter {
                 boolean isTopic = name.startsWith("T");
                 String displayName = isTopic ? name.substring(1) : name;
                 String label = "0";
+
                 if (isTopic) {
                     try {
                         Topic t = TopicManagerSingleton.get().getTopic(displayName);
@@ -73,6 +94,7 @@ public class HtmlGraphWriter {
                 index++;
             }
 
+            // Draw edges between nodes
             for (Node from : g) {
                 for (Node to : from.getEdges()) {
                     int[] src = nodePositions.get(from.getName());

@@ -12,8 +12,24 @@ import java.io.PrintWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
+/**
+ * Servlet responsible for displaying and updating topic values.
+ * <p>
+ * Supports GET requests to the `/publish` endpoint:
+ * - If query parameters `topic` and `value` are provided, the servlet attempts to publish the value to the topic.
+ * - Displays a table with the latest values of all topics.
+ * - Updates the visual graph representation via {@link HtmlGraphWriter}.
+ * </p>
+ */
 public class TopicDisplayer implements Servlet {
 
+    /**
+     * Handles the HTTP GET request to display and optionally update topic values.
+     *
+     * @param ri        the request info containing parameters (e.g., topic, value)
+     * @param toClient  the output stream to write the HTML response to
+     * @throws IOException if writing to the stream fails
+     */
     @Override
     public void handle(RequestInfo ri, OutputStream toClient) throws IOException {
         String topicName = ri.getParameters().get("topic");
@@ -26,10 +42,11 @@ public class TopicDisplayer implements Servlet {
 
         boolean errorShown = false;
 
+        // Handle publishing if parameters are present
         if (topicName != null && value != null) {
             Topic topic = TopicManagerSingleton.get().getTopic(topicName);
             if (topic == null) {
-                // ❌ Error message shown ABOVE the table
+                // ❌ Show error if topic does not exist
                 out.println("<p style='color:red;'>❌ Topic '" + topicName + "' does not exist.</p>");
                 out.println("<p>Available topics:</p><ul>");
                 for (Topic t : TopicManagerSingleton.get().getTopics()) {
@@ -38,17 +55,17 @@ public class TopicDisplayer implements Servlet {
                 out.println("</ul>");
                 errorShown = true;
             } else {
-                // ✅ Publish value
+                // ✅ Publish value to topic
                 topic.publish(new Message(value));
 
-                // Update graph.html
+                // Update graph HTML
                 Graph graph = new Graph();
                 graph.createFromTopics();
                 HtmlGraphWriter.writeGraphHtml(graph);
             }
         }
 
-        // ✅ Always show the topic table
+        // Show topic value table regardless
         if (!errorShown) {
             out.println("<p style='color:green;'>✅ Topic table:</p>");
         }
@@ -63,6 +80,12 @@ public class TopicDisplayer implements Servlet {
         out.flush();
     }
 
+    /**
+     * Uses reflection to extract the last message value from a topic.
+     *
+     * @param topic the topic to inspect
+     * @return the string value of the last message, or "0" if unavailable
+     */
     private String getLastMessageText(Topic topic) {
         try {
             Field f = topic.getClass().getDeclaredField("lastMessage");
@@ -74,6 +97,9 @@ public class TopicDisplayer implements Servlet {
         }
     }
 
+    /**
+     * Closes the servlet (no resources to release in this implementation).
+     */
     @Override
     public void close() {}
 }

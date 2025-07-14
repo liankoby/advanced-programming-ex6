@@ -9,6 +9,12 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A basic multiclient HTTP server implementation for serving servlets.
+ * <p>
+ * Supports mapping servlets to HTTP methods and paths. Handles GET/POST requests and delegates to matching servlet.
+ * Designed to be used in the Advanced Programming exercise as the backend server.
+ */
 public class MyHTTPServer implements HTTPServer {
     private final Map<String, Map<String, Servlet>> servlets = new HashMap<>();
     private boolean running = true;
@@ -16,11 +22,21 @@ public class MyHTTPServer implements HTTPServer {
     private int maxClients;
     private ServerSocket serverSocket;
 
+    /**
+     * Constructs the server on a specific port with a maximum number of clients.
+     *
+     * @param port the port to bind the server socket
+     * @param maxClients maximum number of client connections (not used for limiting in this version)
+     */
     public MyHTTPServer(int port, int maxClients) {
         this.port = port;
         this.maxClients = maxClients;
     }
 
+    /**
+     * Starts the HTTP server loop.
+     * Accepts connections and dispatches requests to the appropriate registered servlet.
+     */
     @Override
     public void start() {
         try (ServerSocket server = new ServerSocket(port)) {
@@ -41,6 +57,11 @@ public class MyHTTPServer implements HTTPServer {
         }
     }
 
+    /**
+     * Handles a single client request by parsing it and delegating to the appropriate servlet.
+     *
+     * @param client the accepted client socket
+     */
     private void handleClient(Socket client) {
         try (
                 BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -79,6 +100,9 @@ public class MyHTTPServer implements HTTPServer {
         }
     }
 
+    /**
+     * Gracefully shuts down the server and closes the server socket.
+     */
     @Override
     public void close() {
         this.running = false;
@@ -89,6 +113,13 @@ public class MyHTTPServer implements HTTPServer {
         }
     }
 
+    /**
+     * Registers a servlet for a specific HTTP method and URI prefix.
+     *
+     * @param method  the HTTP method (e.g., "GET", "POST")
+     * @param uri     the URI or URI prefix to match
+     * @param servlet the servlet to handle matching requests
+     */
     @Override
     public void addServlet(String method, String uri, Servlet servlet) {
         servlets.putIfAbsent(method, new HashMap<>());

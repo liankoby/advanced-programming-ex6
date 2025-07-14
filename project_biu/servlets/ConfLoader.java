@@ -11,8 +11,23 @@ import project_biu.views.HtmlGraphWriter;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Servlet responsible for handling configuration file uploads via multipart/form-data POST requests.
+ * <p>
+ * Parses the uploaded config file, resets the topic system, builds a new graph using the config,
+ * initializes all topics with value "0", and renders a new graph HTML visualization.
+ * </p>
+ */
 public class ConfLoader implements Servlet {
 
+    /**
+     * Handles the POST request for uploading a configuration file.
+     * Extracts the file content, parses it, and builds the computational graph.
+     *
+     * @param ri        the parsed HTTP request info, including content and headers
+     * @param toClient  the output stream to write the HTTP response
+     * @throws IOException if I/O operations fail
+     */
     @Override
     public void handle(RequestInfo ri, OutputStream toClient) throws IOException {
         byte[] body = ri.getContent();
@@ -71,6 +86,13 @@ public class ConfLoader implements Servlet {
         out.flush();
     }
 
+    /**
+     * Sends an HTTP 400 error message to the client with plain text explanation.
+     *
+     * @param toClient the output stream to write the response
+     * @param msg      the error message to send
+     * @throws IOException if writing fails
+     */
     private void respondError(OutputStream toClient, String msg) throws IOException {
         PrintWriter out = new PrintWriter(toClient);
         out.println("HTTP/1.1 400 Bad Request");
@@ -80,5 +102,8 @@ public class ConfLoader implements Servlet {
         out.flush();
     }
 
+    /**
+     * Closes the servlet (no cleanup necessary).
+     */
     @Override public void close() {}
 }

@@ -6,8 +6,19 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * Utility class for parsing HTTP requests from an input stream.
+ * <p>
+ * Extracts the method, URI, query parameters, headers, and body content into a structured {@link RequestInfo} object.
+ * Supports both GET and POST requests, including application/x-www-form-urlencoded form decoding.
+ */
 public class RequestParser {
 
+    /**
+     * Represents a parsed HTTP request.
+     * <p>
+     * Contains method, URI, URI segments, query/form parameters, headers, and body content.
+     */
     public static class RequestInfo {
         private final String httpCommand;
         private final String uri;
@@ -16,6 +27,16 @@ public class RequestParser {
         private final Map<String, String> headers;
         private final byte[] content;
 
+        /**
+         * Constructs a new RequestInfo object.
+         *
+         * @param httpCommand HTTP method (e.g., GET or POST)
+         * @param uri raw request URI (possibly including query string)
+         * @param uriSegments URI path segments split by "/"
+         * @param parameters parsed parameters from query string and form body
+         * @param headers HTTP headers
+         * @param content raw request body content as byte array
+         */
         public RequestInfo(String httpCommand, String uri, String[] uriSegments,
                            Map<String, String> parameters,
                            Map<String, String> headers,
@@ -28,14 +49,32 @@ public class RequestParser {
             this.content = content;
         }
 
+        /** @return HTTP method (e.g., GET, POST) */
         public String getHttpCommand() { return httpCommand; }
+
+        /** @return raw URI from the request */
         public String getUri() { return uri; }
+
+        /** @return URI path segments (split by "/") */
         public String[] getUriSegments() { return uriSegments; }
+
+        /** @return map of query parameters and form data */
         public Map<String, String> getParameters() { return parameters; }
+
+        /** @return map of HTTP headers */
         public Map<String, String> getHeaders() { return headers; }
+
+        /** @return raw body content as byte array */
         public byte[] getContent() { return content; }
     }
 
+    /**
+     * Parses a raw HTTP request from the input stream.
+     *
+     * @param in the input reader connected to the socket
+     * @return a {@link RequestInfo} object representing the parsed request
+     * @throws IOException if the request is malformed or reading fails
+     */
     public static RequestInfo parseRequest(BufferedReader in) throws java.io.IOException {
         String requestLine = in.readLine();
         if (requestLine == null) throw new java.io.IOException("Empty request");

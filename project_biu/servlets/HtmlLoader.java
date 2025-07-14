@@ -5,14 +5,33 @@ import project_biu.server.RequestParser.RequestInfo;
 import java.io.*;
 import java.nio.file.Files;
 
+/**
+ * A servlet that serves static HTML files from a specified base directory.
+ * <p>
+ * This servlet is mapped to <code>/app/*</code> and is responsible for delivering
+ * files like <code>index.html</code>, <code>form.html</code>, etc., to the browser.
+ * </p>
+ */
 public class HtmlLoader implements Servlet {
     private final String basePath;
 
+    /**
+     * Creates a new HtmlLoader with a base path to serve files from.
+     *
+     * @param basePath the root directory where HTML files are stored
+     */
     public HtmlLoader(String basePath) {
         this.basePath = basePath;
         System.out.println("HtmlLoader initialized with basePath: " + basePath);
     }
 
+    /**
+     * Handles HTTP GET requests and serves the requested HTML file.
+     *
+     * @param ri        the request info, including URI
+     * @param toClient  the output stream to write the file content to
+     * @throws IOException if the file cannot be read or written
+     */
     @Override
     public void handle(RequestInfo ri, OutputStream toClient) throws IOException {
         String requestUri = ri.getUri();
@@ -41,7 +60,7 @@ public class HtmlLoader implements Servlet {
             out.println("HTTP/1.1 200 OK");
             out.println("Content-Type: text/html");
             out.println();
-            out.flush(); // Flush headers before file content
+            out.flush(); // Flush headers before sending content
 
             Files.copy(file.toPath(), toClient);
         }
@@ -49,6 +68,9 @@ public class HtmlLoader implements Servlet {
         toClient.flush();
     }
 
+    /**
+     * Closes the servlet (no cleanup required in this implementation).
+     */
     @Override
     public void close() {}
 }
